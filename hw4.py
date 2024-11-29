@@ -27,7 +27,6 @@ def filter_by_state(counties:list[CountyDemographics],state:str) -> list[CountyD
     for county in counties:
         if county.state == state:
             returning_list.append(county)
-
     return returning_list
 
 #part 3
@@ -164,9 +163,9 @@ def education_less_than(counties: list[CountyDemographics], education_key: str, 
     result = []
 
     for county in counties:
-        if county.education.get(education_key, 0) < threshold:
-            result.append(county)
 
+        if education_key in county.education and county.education[education_key] < threshold:
+            result.append(county)
     return result
 
 # the purpose of this function is to filter and return all counties where the specified ethnicity key is greater than the threshold
@@ -196,6 +195,7 @@ def ethnicity_less_than(counties: list[CountyDemographics], ethnicity: str, thre
     for county in counties:
         if county.ethnicities.get(ethnicity, 0) < threshold:
             result.append(county)
+
 
     return result
 
@@ -232,85 +232,98 @@ def below_poverty_level_less_than(counties: list[CountyDemographics], threshold:
     return result
 
 def main():
+    try:
+        with open("inputs/"+sys.argv[1],"r") as file:
+            line = file.readline()
+            print(line)
+            print("Records:", len(fd))
+            cali_data = filter_by_state(fd, "CA")
 
-    file = "inputs/"+sys.argv[1]
-    print(file)
-    infile = open(file,'r')
-    print("Records:", len(fd))
-    cali_data = filter_by_state(fd, "CA")
+            second = ""
+            file_contents = file.readlines()
+            count = 0
+            while line:
 
-    for line in infile:
-        if line == "filter-gt:Education.Bachelor's Degree or Higher:60":
-            print("Bachelor's Degree or Higher: ", education_greater_than(fd, "Bachelor's Degree or Higher ", 60))
+                line = line.strip()
 
-        elif line == "filter-state:CA" and infile.readline(2).strip == "population-total":
-            print("For 2014 ...")
-            print("Population in 2014: ", population_total(filter_by_state(fd,"CA")))
-            print("Education.Bachelor's Degree or Higher: ", percent_by_education(cali_data, "Bachelor's Degree or Higher"))
-            print("Education.High School or Higher percent: ", percent_by_education(cali_data, "High School"))
-            print("Ethnicities.American Indian and Alaska Native Alone percent: ",percent_by_ethnicity(cali_data, "American Indian and Alaska Native Alone") )
-            print("Ethnicities.Asian Alone percent: ", percent_by_ethnicity(cali_data, "Asian Alone"))
-            print("Ethnicities.Black Alone percent: ", percent_by_ethnicity(cali_data, "Black Alone"))
-            print("Ethnicities.Hispanic or Latino percent: ", percent_by_ethnicity(cali_data, "Hispanic or Latino"))
-            print("Ethnicities.Native Hawaiian and Other Pacific Islander Alone percent: ", percent_by_ethnicity(cali_data, "Native Hawaiian and Other Pacific Islander Alone"))
-            print("Ethnicities.Two or More Races percent: ", percent_by_ethnicity(cali_data, "Two or More Races"))
-            print("Ethnicities.White Alone percent: ", percent_by_ethnicity(cali_data, "White Alone"))
-            print("Ethnicities.White Alone, not Hispanic or Latino percent: ", percent_by_ethnicity(cali_data, "White Alone, not Hispanic or Latino"))
-            print("Income.Persons Below Poverty Level percent: ", percent_by_ethnicity(cali_data, "Persons Below Poverty Level"))
-
-        elif line == "filter-lt:Education.High School or Higher:60":
-            print("High School or Higher: ", education_less_than(fd, "High School or Higher: ", 60))
+                print(line)
 
 
-        elif line == "filter-state:CA":
-            print(cali_data)
+                if line == "filter-gt:Education.Bachelor's Degree or Higher:60":
+                    print("Bachelor's Degree or Higher: ", education_greater_than(fd, "Bachelor's Degree or Higher", 60))
 
-        elif line == "percent:Education.Bachelor's Degree or Higher":
-
-            print("For 2014 ...")
-            print("Education.Bachelor's Degree or Higher: ",
-                  percent_by_education(fd, "Bachelor's Degree or Higher"))
-            print("Education.High School or Higher percent: ", percent_by_education(fd, "High School"))
-            print("Ethnicities.American Indian and Alaska Native Alone percent: ",
-                  percent_by_ethnicity(fd, "American Indian and Alaska Native Alone"))
-            print("Ethnicities.Asian Alone percent: ", percent_by_ethnicity(fd, "Asian Alone"))
-            print("Ethnicities.Black Alone percent: ", percent_by_ethnicity(fd, "Black Alone"))
-            print("Ethnicities.Hispanic or Latino percent: ", percent_by_ethnicity(fd, "Hispanic or Latino"))
-            print("Ethnicities.Native Hawaiian and Other Pacific Islander Alone percent: ",
-                  percent_by_ethnicity(fd, "Native Hawaiian and Other Pacific Islander Alone"))
-            print("Ethnicities.Two or More Races percent: ", percent_by_ethnicity(fd, "Two or More Races"))
-            print("Ethnicities.White Alone percent: ", percent_by_ethnicity(fd, "White Alone"))
-            print("Ethnicities.White Alone, not Hispanic or Latino percent: ",
-                  percent_by_ethnicity(fd, "White Alone, not Hispanic or Latino"))
-            print("Income.Persons Below Poverty Level percent: ",
-                  percent_below_poverty_level(fd))
+                elif line == "filter-lt:Education.High School or Higher:60":
+                    print("High School or Higher: ", education_less_than(fd, "High School or Higher", 60))
 
 
-        elif line == "population-total":
-            print("Population in 2014: ", population_total(fd))
+                elif line == "percent:Education.Bachelor's Degree or Higher":
 
-        elif line == "population:Education.Bachelor's Degree or Higher":
-            print("For 2014 ...")
-            print("Education.Bachelor's Degree or Higher: ", percent_by_education(fd, "High School"))
-            print("Education.High School or Higher population: ", population_by_education(fd, "High School"))
-            print("Ethnicities.American Indian and Alaska Native Alone population: ", population_by_ethnicity(fd, "American Indian and Alaska Native Alone"))
-            print("Ethnicities.Asian Alone population: ", population_by_ethnicity(fd, "Asian Alone"))
-            print("Ethnicities.Black Alone population: ", population_by_ethnicity(fd, "Black Alone"))
-            print("Ethnicities.Hispanic or Latino population: ", population_by_ethnicity(fd, "Hispanic or Latino"))
-            print("Ethnicities.Native Hawaiian and Other Pacific Islander Alone population: ", population_by_ethnicity(fd, "Native Hawaiian and Other Pacific Islander Alone"))
-            print("Ethnicities.Two or More Races population: ", population_by_ethnicity(fd, "Two or More Races"))
-            print("Ethnicities.White Alone population: ", population_by_ethnicity(fd, "White Alone"))
-            print("Ethnicities.White Alone, not Hispanic or Latino population: ",
-                  population_by_ethnicity(fd, "White Alone, not Hispanic or Latino"))
-            print("Income.Persons Below Poverty Level population: ",
-                  population_below_poverty_level(fd))
+                    print("For 2014 ...")
+                    print("Education.Bachelor's Degree or Higher: ",
+                          percent_by_education(fd, "Bachelor's Degree or Higher"))
+                    print("Education.High School or Higher percent: ", percent_by_education(fd, "High School"))
+                    print("Ethnicities.American Indian and Alaska Native Alone percent: ",
+                          percent_by_ethnicity(fd, "American Indian and Alaska Native Alone"))
+                    print("Ethnicities.Asian Alone percent: ", percent_by_ethnicity(fd, "Asian Alone"))
+                    print("Ethnicities.Black Alone percent: ", percent_by_ethnicity(fd, "Black Alone"))
+                    print("Ethnicities.Hispanic or Latino percent: ", percent_by_ethnicity(fd, "Hispanic or Latino"))
+                    print("Ethnicities.Native Hawaiian and Other Pacific Islander Alone percent: ",
+                          percent_by_ethnicity(fd, "Native Hawaiian and Other Pacific Islander Alone"))
+                    print("Ethnicities.Two or More Races percent: ", percent_by_ethnicity(fd, "Two or More Races"))
+                    print("Ethnicities.White Alone percent: ", percent_by_ethnicity(fd, "White Alone"))
+                    print("Ethnicities.White Alone, not Hispanic or Latino percent: ",
+                          percent_by_ethnicity(fd, "White Alone, not Hispanic or Latino"))
+                    print("Income.Persons Below Poverty Level percent: ",
+                          percent_below_poverty_level(fd))
 
 
-        else:
-            print("File not found")
-        break
+                elif line == "population-total":
+                    print("Population in 2014: ", population_total(fd))
 
-    infile.close()
+                elif line == "population:Education.Bachelor's Degree or Higher":
+                    print("For 2014 ...")
+                    print("Education.Bachelor's Degree or Higher: ", population_by_education(fd, "Bachelor's Degree or Higher"))
+                    print("Education.High School or Higher population: ", population_by_education(fd, "High School or Higher"))
+                    print("Ethnicities.American Indian and Alaska Native Alone population: ", population_by_ethnicity(fd, "American Indian and Alaska Native Alone"))
+                    print("Ethnicities.Asian Alone population: ", population_by_ethnicity(fd, "Asian Alone"))
+                    print("Ethnicities.Black Alone population: ", population_by_ethnicity(fd, "Black Alone"))
+                    print("Ethnicities.Hispanic or Latino population: ", population_by_ethnicity(fd, "Hispanic or Latino"))
+                    print("Ethnicities.Native Hawaiian and Other Pacific Islander Alone population: ", population_by_ethnicity(fd, "Native Hawaiian and Other Pacific Islander Alone"))
+                    print("Ethnicities.Two or More Races population: ", population_by_ethnicity(fd, "Two or More Races"))
+                    print("Ethnicities.White Alone population: ", population_by_ethnicity(fd, "White Alone"))
+                    print("Ethnicities.White Alone, not Hispanic or Latino population: ",
+                          population_by_ethnicity(fd, "White Alone, not Hispanic or Latino"))
+                    print("Income.Persons Below Poverty Level population: ",
+                          population_below_poverty_level(fd))
+                elif line == "filter-state:CA":
+
+
+                    if sys.argv[1] == "ca.ops":
+                        print("For 2014 ...")
+                        print("Population in 2014: ", population_total(filter_by_state(fd,"CA")))
+                        print("Education.Bachelor's Degree or Higher: ", percent_by_education(cali_data, "Bachelor's Degree or Higher"))
+                        print("Education.High School or Higher percent: ", percent_by_education(cali_data, "High School"))
+                        print("Ethnicities.American Indian and Alaska Native Alone percent: ",percent_by_ethnicity(cali_data, "American Indian and Alaska Native Alone") )
+                        print("Ethnicities.Asian Alone percent: ", percent_by_ethnicity(cali_data, "Asian Alone"))
+                        print("Ethnicities.Black Alone percent: ", percent_by_ethnicity(cali_data, "Black Alone"))
+                        print("Ethnicities.Hispanic or Latino percent: ", percent_by_ethnicity(cali_data, "Hispanic or Latino"))
+                        print("Ethnicities.Native Hawaiian and Other Pacific Islander Alone percent: ", percent_by_ethnicity(cali_data, "Native Hawaiian and Other Pacific Islander Alone"))
+                        print("Ethnicities.Two or More Races percent: ", percent_by_ethnicity(cali_data, "Two or More Races"))
+                        print("Ethnicities.White Alone percent: ", percent_by_ethnicity(cali_data, "White Alone"))
+                        print("Ethnicities.White Alone, not Hispanic or Latino percent: ", percent_by_ethnicity(cali_data, "White Alone, not Hispanic or Latino"))
+                        print("Income.Persons Below Poverty Level percent: ", percent_by_ethnicity(cali_data, "Persons Below Poverty Level"))
+                    else:
+                        print("Filter: state == CA(58 entries)")
+                        print(cali_data)
+                else:
+                    print("File not found")
+
+                line = file.readline()
+    except Exception as e:
+        print(e)
+
+
+
 
 if __name__ == "__main__":
     try:
@@ -318,4 +331,3 @@ if __name__ == "__main__":
     except FileNotFoundError:
         print("error")
 
-main()
