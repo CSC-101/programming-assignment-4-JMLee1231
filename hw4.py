@@ -295,6 +295,23 @@ def main():
                           population_by_ethnicity(fd, "White Alone, not Hispanic or Latino"))
                     print("Income.Persons Below Poverty Level population: ",
                           population_below_poverty_level(fd))
+
+                elif line == "filter-lt:Education.High School or Higher:80":
+
+                    filtered_counties = education_less_than(fd,"High School or Higher", 80)
+                    print(percent_below_poverty_level(filtered_counties))
+                elif line == "filter-gt:Education.Bachelor's Degree or Higher:40":
+
+                    filtered_counties = education_greater_than(fd, "Bachelor's Degree or Higher", 40)
+                    print(percent_below_poverty_level(filtered_counties))
+                elif line == "filter-gt:Ethnicities.Asian Alone:60":
+                    filtered_counties = ethnicity_greater_than(fd, "Asian Alone", 40)
+                    print(percent_below_poverty_level(filtered_counties))
+
+                elif line == "filter-lt:Ethnicities.Asian Alone:60":
+                    filtered_counties = ethnicity_less_than(fd, "Asian Alone", 40)
+                    print(percent_below_poverty_level(filtered_counties))
+
                 elif line == "filter-state:CA":
 
 
