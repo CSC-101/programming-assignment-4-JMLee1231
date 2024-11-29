@@ -304,11 +304,11 @@ def main():
 
                     filtered_counties = education_greater_than(fd, "Bachelor's Degree or Higher", 40)
                     print(percent_below_poverty_level(filtered_counties))
-                elif line == "filter-gt:Ethnicities.Asian Alone:60":
+                elif line == "filter-gt:Ethnicities.Asian Alone:40":
                     filtered_counties = ethnicity_greater_than(fd, "Asian Alone", 40)
                     print(percent_below_poverty_level(filtered_counties))
 
-                elif line == "filter-lt:Ethnicities.Asian Alone:60":
+                elif line == "filter-lt:Ethnicities.Asian Alone:40":
                     filtered_counties = ethnicity_less_than(fd, "Asian Alone", 40)
                     print(percent_below_poverty_level(filtered_counties))
 
